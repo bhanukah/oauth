@@ -1,6 +1,7 @@
 package com.ssd.oauth2;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,6 +20,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClients;
 
@@ -63,8 +66,6 @@ public class UploadServlet extends HttpServlet {
             accessToken = session.getAttribute("accessToken").toString();
         }
 
-        Collection<Part> parts = request.getParts();
-
         Part filePart = request.getPart("file");
         InputStream imageInputStream = filePart.getInputStream();
 
@@ -73,21 +74,12 @@ public class UploadServlet extends HttpServlet {
         byte[] buffer = new byte[imageInputStream.available()];
 
         HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost("https://www.googleapis.com/upload/drive/v2/files");
+        HttpPost httppost = new HttpPost("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart");
   
-        MultipartEntityBuilder builder;
-        builder = MultipartEntityBuilder.create();
-        String boundary = "Content-Type: image/jpeg";
-        builder.setBoundary(boundary);
-        builder.addTextBody("name", "uploadedByOAuth2.jpg");
-        builder.addBinaryBody("JPEG_DATA", buffer);
-
-        HttpEntity multipart = builder.build();
-        httppost.setEntity(multipart);
-
-        httppost.setHeader("uploadType", "multipart");
-        httppost.setHeader("Content-Type", "image/jpeg");
+        httppost.setEntity(new ByteArrayEntity(buffer));
+        
         httppost.setHeader("Authorization", "Bearer " + accessToken);
+        httppost.setHeader("Content-Type", "image/jpeg");
         
         //Execute and get the response.
         HttpResponse response2;
@@ -114,7 +106,7 @@ public class UploadServlet extends HttpServlet {
                     out.println("<title>Servlet UploadServerlet</title>");
                     out.println("</head>");
                     out.println("<body>");
-                    out.println("<h1>Servlet UploadServerlet at " + upoutput + "</h1>");
+                    out.println("<h1>Uploaded File Data :" + upoutput + "</h1>");
                     out.println("</body>");
                     out.println("</html>");
                 }
