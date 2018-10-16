@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ssd.oauth2;
 
 import java.io.BufferedReader;
@@ -10,14 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -53,13 +43,6 @@ public class callback extends HttpServlet {
             session.setAttribute("accessToken", accessToken);
             response.sendRedirect("addfile.jsp");
 
-            //Map<String, String> requestHeaders = new HashMap<String, String>();
-
-            //requestHeaders.put("Authorization", "Bearer " + accessToken);
-
-            //String resp = OAuthTLSUtil.sendRequest(linkedInUserInfoEndpoint, requestHeaders, requestProps, "GET");
-            //request.setAttribute("profile_info", resp);
-            //request.getRequestDispatcher("profile.jsp").forward(request, response);
         } else {
             response.setContentType("text/html;charset=UTF-8");
             PrintWriter out = response.getWriter();
